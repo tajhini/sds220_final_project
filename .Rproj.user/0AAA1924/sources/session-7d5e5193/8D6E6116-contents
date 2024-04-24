@@ -1,0 +1,13 @@
+---
+title: "final_proj"
+format: html
+editor: visual
+---
+
+```{r}
+library(dplyr)
+library(moderndive)
+
+legos<- read_csv("http://wjhopper.github.io/SDS-201/data/legos.csv")
+
+```

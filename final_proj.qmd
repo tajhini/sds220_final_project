@@ -1,0 +1,20 @@
+---
+title: "Data Analysis Project"
+format: pdf
+editor: visual
+---
+
+```{r}
+library(infer)
+library(tidyverse)
+library(dplyr)
+library(moderndive)
+legos <- read_csv("http://wjhopper.github.io/SDS-201/data/legos.csv")
+```
+
+```{r}
+legos |> 
+  ggplot(aes(x = Theme, y = Price))+
+  geom_boxplot()
+ 
+```

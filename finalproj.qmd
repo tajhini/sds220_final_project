@@ -7,8 +7,55 @@ editor: visual
 ```{r}
 library(dplyr)
 library(moderndive)
+library(tidyverse)
+library(infer)
+```
 
+```{r}
+bechdel_test<- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTWRU0Gw709mILtOtlhk7T_tsRrYf6GGefAACs6kbUz33OFQsjK_K34XO1KJ5TM3MK1plSbJXIh_9n2/pub?output=csv") |> 
+  select(binary, intgross, domgross)|>
+  filter(!is.na(binary))|>
+  filter(!is.na(intgross)) |>
+  filter(!is.na(domgross)) |>
+  mutate(totalgross = domgross + intgross)
+```
 
-legos<- read_csv("http://wjhopper.github.io/SDS-201/data/legos.csv")
+```{r}
+bechdel_test |>
+  ggplot(aes(x = binary, y = totalgross))+
+  geom_boxplot() + 
+  labs(title = "Film Total Grossed Earnings vs Bechdel Test Result", x = "Bechdel Test Result", y = "Total Gross Earnings")
+```
 
+T-Test
+
+$$
+\mu_{PASS} - \mu_{FAIL} = 0 \\
+\mu_{PASS} - \mu_{FAIL} \ne 0
+$$
+
+```{r}
+t_stat <- bechdel_test |>
+  specify(formula = totalgross ~ binary) |>
+  hypothesise(null = "point", mu = 0) |>
+  calculate(stat = "t", order = c("PASS", "FAIL"))
+
+t_stat
+```
+
+```{r}
+t_dist <- bechdel_test |>
+  specify(formula = totalgross ~ binary) |>
+  assume(distribution = "t")
+
+t_dist
+```
+
+```{r}
+visualise(t_dist)
+```
+
+```{r}
+t_dist |>
+  get_p_value(obs_stat = t_stat, direction = "both")
 ```
